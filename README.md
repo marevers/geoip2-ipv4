@@ -1,5 +1,3 @@
-<a className="gh-badge" href="https://datahub.io/core/geoip2-ipv4"><img src="https://badgen.net/badge/icon/View%20on%20datahub.io/orange?icon=https://datahub.io/datahub-cube-badge-icon.svg&label&scale=1.25" alt="badge" /></a>
-
 Database of IPv4 address networks with their respective geographical location.
 
 ## Data
@@ -13,14 +11,9 @@ GeoLite2-Country-Blocks-IPv4.csv
 GeoLite2-Country-Locations-en.csv  
 ```
 
-with the following considerations:  
-
-- Where geoname_id was not available, registered_country_geoname_id was used.
-- Where geoname_id and registered_country_genoname_id where empty, geoname_id, continent_code, continent_name, country_iso_code and country_name are empty.
-
 ## Preparation
 
-Original CSVs were imported into a MySQL database, then with a script an additional CSV was created combining Country names, locations and IPs. 
+Once a week, a new dataset is automatically downloaded from MaxMind and then processed using a Github Action. The Github Action uses the `geoname_id` column to combine the two CSVs together, to add the country and continent information.
 
 ## License
 
