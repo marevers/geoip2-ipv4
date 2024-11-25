@@ -59,7 +59,7 @@ jobs:
       - name: Check for changes
         id: check_changes
         run: |
-          if git diff --quiet data/geoip2-ipv4.csv; then
+          if git diff --quiet HEAD -- geoip2-ipv4.csv; then
             echo "File has not changed."
             echo "changed=false" >> $GITHUB_ENV
           else
