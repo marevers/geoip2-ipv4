@@ -35,9 +35,11 @@ jobs:
           # Remove headers and unnecessary columns from IPV4_FILE
           tail -n +2 blocks_utf8.csv | cut -d',' -f1,2,5,6 > blocks_trimmed.csv
 
-          # Remove headers, sanitize country_name, and extract relevant columns from LOCATIONS_FILE
-          tail -n +2 locations_utf8.csv | cut -d',' -f1,3,4,5,6,7 \
-          | awk -F',' '{gsub(/,/, " ", $5); print $0}' > locations_trimmed.csv
+          # Sanitize country names
+          sed -i "s/, / /g" locations_utf8.csv
+
+          # Remove headers and extract relevant columns from LOCATIONS_FILE
+          tail -n +2 locations_utf8.csv | cut -d',' -f1,3,4,5,6,7 > locations_trimmed.csv
 
           # Sort both files by geoname_id
           sort -t',' -k2,2 blocks_trimmed.csv > blocks_sorted.csv
