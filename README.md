@@ -13,7 +13,7 @@ GeoLite2-Country-Locations-en.csv
 
 ## Preparation
 
-Once a week, a new dataset is automatically downloaded from MaxMind and then processed using a Github Action. The Github Action uses the `geoname_id` column to combine the two CSVs together, to add the country and continent information.
+Once a week, a new dataset is automatically downloaded from MaxMind and then processed using a Github Action. The Github Action uses the `geoname_id` column to combine the two CSVs together, to add the country and continent information. If the resulting output has changed, the updated file `data/geoip2-ipv4.csv` is committed.
 
 ## License
 
