@@ -28,11 +28,16 @@ jobs:
           LOCATIONS_FILE=$(find ./geolite2/ -name GeoLite2-Country-Locations-en.csv)
           OUTPUT_FILE='data/geoip2-ipv4.csv'
 
-          # Remove headers and unnecessary columns from IPV4_FILE
-          tail -n +2 "$IPV4_FILE" | cut -d',' -f1,2,5,6 > blocks_trimmed.csv
+          # Convert files to UTF-8
+          iconv -f UTF-8 -t UTF-8 "$IPV4_FILE" -o blocks_utf8.csv
+          iconv -f UTF-8 -t UTF-8 "$LOCATIONS_FILE" -o locations_utf8.csv
 
-          # Remove headers and extract relevant columns from LOCATIONS_FILE
-          tail -n +2 "$LOCATIONS_FILE" | cut -d',' -f1,3,4,5,6,7 > locations_trimmed.csv
+          # Remove headers and unnecessary columns from IPV4_FILE
+          tail -n +2 blocks_utf8.csv | cut -d',' -f1,2,5,6 > blocks_trimmed.csv
+
+          # Remove headers, sanitize country_name, and extract relevant columns from LOCATIONS_FILE
+          tail -n +2 locations_utf8.csv | cut -d',' -f1,3,4,5,6,7 \
+          | awk -F',' '{gsub(/,/, " ", $5); print $0}' > locations_trimmed.csv
 
           # Sort both files by geoname_id
           sort -t',' -k2,2 blocks_trimmed.csv > blocks_sorted.csv
@@ -48,7 +53,7 @@ jobs:
           cat merged_unsorted.csv >> "$OUTPUT_FILE"
 
           # Cleanup
-          rm geolite2.zip blocks_trimmed.csv locations_trimmed.csv blocks_sorted.csv locations_sorted.csv merged_unsorted.csv
+          rm geolite2.zip blocks_utf8.csv locations_utf8.csv blocks_trimmed.csv locations_trimmed.csv blocks_sorted.csv locations_sorted.csv merged_unsorted.csv
           rm -r ./geolite2/
 
       - name: Check for changes
