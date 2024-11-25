@@ -38,11 +38,13 @@ jobs:
           sort -t',' -k2,2 blocks_trimmed.csv > blocks_sorted.csv
           sort -t',' -k1,1 locations_trimmed.csv > locations_sorted.csv
 
-          # Join the files on geoname_id
-          join -t',' -1 2 -2 1 -o 1.1,1.2,1.3,1.4,2.2,2.3,2.4,2.5,2.6 blocks_sorted.csv locations_sorted.csv > merged_unsorted.csv
+          # Join the files on geoname_id and reorder columns
+          join -t',' -1 2 -2 1 \
+            -o 1.1,1.2,2.2,2.3,2.4,2.5,2.6,1.3,1.4 \
+            blocks_sorted.csv locations_sorted.csv > merged_unsorted.csv
 
           # Add the header row to the merged file
-          echo "network,geoname_id,is_anonymous_proxy,is_satellite_provider,continent_code,continent_name,country_iso_code,country_name,is_in_european_union" > "$OUTPUT_FILE"
+          echo "network,geoname_id,continent_code,continent_name,country_iso_code,country_name,is_in_european_union,is_anonymous_proxy,is_satellite_provider" > "$OUTPUT_FILE"
           cat merged_unsorted.csv >> "$OUTPUT_FILE"
 
           # Cleanup
